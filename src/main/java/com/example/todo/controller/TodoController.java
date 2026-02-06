@@ -10,18 +10,18 @@ public class TodoController {
     // ToDo一覧画面を表示します。
     @GetMapping("/todos")
     public String list() {
-        return "todos/list";
+        return "todo/list";
     }
 
     // ToDo新規作成画面を表示します。
     @GetMapping("/todos/new")
     public String newTodo() {
-        return "todos/new";
+        return "todo/new";
     }
 
     // 指定IDのToDo詳細画面を表示します。
     @GetMapping("/todos/{id}")
     public String detail(@PathVariable("id") Long id) {
-        return "todos/detail";
+        return "todo/detail";
     }
 }
