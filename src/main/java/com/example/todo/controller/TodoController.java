@@ -35,6 +35,20 @@ public class TodoController {
         return "todo/confirm";
     }
 
+    @PostMapping("/todos/complete")
+    public String complete(
+            @RequestParam("title") String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "priority", defaultValue = "3") Integer priority,
+            Model model
+    ) {
+        // In a real app, persist the data here.
+        model.addAttribute("title", title);
+        model.addAttribute("description", description);
+        model.addAttribute("priority", priority);
+        return "todo/complete";
+    }
+
     // 指定IDのToDo詳細画面を表示します。
     @GetMapping("/todos/{id}")
     public String detail(@PathVariable("id") Long id) {
