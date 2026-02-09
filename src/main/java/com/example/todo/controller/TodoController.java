@@ -53,6 +53,13 @@ public class TodoController {
         return "redirect:/todos";
     }
 
+    @GetMapping("/todos/{id}/edit")
+    public String edit(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("form", todoService.findFormById(id));
+        model.addAttribute("todoId", id);
+        return "todo/edit";
+    }
+
     // 指定IDのToDo詳細画面を表示します。
     @GetMapping("/todos/{id}")
     public String detail(@PathVariable("id") Long id) {

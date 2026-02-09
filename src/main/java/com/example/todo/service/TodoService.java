@@ -2,6 +2,7 @@
 
 import com.example.todo.entity.Todo;
 import com.example.todo.exception.TodoNotFoundException;
+import com.example.todo.exception.TodoNotFoundForEditException;
 import com.example.todo.form.TodoForm;
 import com.example.todo.repository.TodoRepository;
 import java.util.List;
@@ -29,6 +30,13 @@ public class TodoService {
         return todoRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
+    @Transactional(readOnly = true)
+    public TodoForm findFormById(Long id) {
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoundForEditException(id));
+        return toForm(todo);
+    }
+
     @Transactional
     public void deleteById(Long id) {
         Todo todo = todoRepository.findById(id)
@@ -44,5 +52,13 @@ public class TodoService {
             todo.setPriority(form.getPriority());
         }
         return todo;
+    }
+
+    private TodoForm toForm(Todo todo) {
+        TodoForm form = new TodoForm();
+        form.setTitle(todo.getTitle());
+        form.setDescription(todo.getDescription());
+        form.setPriority(todo.getPriority());
+        return form;
     }
 }
