@@ -27,8 +27,11 @@
                 <h2 class="h5 mb-3" th:text="${todo.title}">タイトル</h2>
 
                 <dl class="row mb-0">
-                    <dt class="col-sm-3">説明</dt>
-                    <dd class="col-sm-9" th:text="${todo.description}">説明</dd>
+                    <dt class="col-sm-3">作成者</dt>
+                    <dd class="col-sm-9" th:text="${todo.author}">作成者</dd>
+
+                    <dt class="col-sm-3">詳細</dt>
+                    <dd class="col-sm-9" th:text="${todo.detail}">詳細</dd>
 
                     <dt class="col-sm-3">期限日</dt>
                     <dd class="col-sm-9" th:text="${todo.dueDate}">2026-02-10</dd>

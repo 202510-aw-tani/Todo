@@ -29,8 +29,11 @@ public class Todo {
     @Column(nullable = false, length = 100)
     private String title;
 
+    @Column(nullable = false, length = 50)
+    private String author;
+
     @Column(length = 500)
-    private String description;
+    private String detail;
 
     private LocalDate dueDate;
 

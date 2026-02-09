@@ -53,7 +53,8 @@ public class TodoService {
             throw new OptimisticLockingFailureException("Version mismatch");
         }
         todo.setTitle(form.getTitle());
-        todo.setDescription(form.getDescription());
+        todo.setAuthor(form.getAuthor());
+        todo.setDetail(form.getDetail());
         if (form.getPriority() != null) {
             todo.setPriority(form.getPriority());
         }
@@ -89,7 +90,8 @@ public class TodoService {
     private TodoForm toForm(Todo todo) {
         TodoForm form = new TodoForm();
         form.setTitle(todo.getTitle());
-        form.setDescription(todo.getDescription());
+        form.setAuthor(todo.getAuthor());
+        form.setDetail(todo.getDetail());
         form.setPriority(todo.getPriority());
         form.setVersion(todo.getVersion());
         return form;

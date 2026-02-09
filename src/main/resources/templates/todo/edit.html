@@ -14,28 +14,34 @@
                 <div class="card-body">
                     <h1 class="h4 mb-4">ToDo 編集</h1>
 
-                    <form th:action="@{/todos/{id}/update(id=${todoId})}" method="post">
-                        <input type="hidden" name="version" th:value="${form.version}">
+                    <form th:action="@{/todos/{id}/update(id=${todoId})}" method="post" th:object="${form}">
+                        <input type="hidden" th:field="*{version}">
                         <div class="mb-3">
-                            <label for="title" class="form-label">タイトル</label>
-                            <input type="text" id="title" name="title" class="form-control" required
-                                   th:value="${form.title}">
+                            <label for="author" class="form-label">作成者</label>
+                            <input type="text" id="author" class="form-control" th:field="*{author}" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">説明</label>
-                            <textarea id="description" name="description" class="form-control" rows="4"
-                                      th:text="${form.description}"></textarea>
+                            <label for="title" class="form-label">タイトル</label>
+                            <input type="text" id="title" class="form-control" th:field="*{title}" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="detail" class="form-label">詳細</label>
+                            <textarea id="detail" class="form-control" rows="4" th:field="*{detail}"></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
                         </div>
 
                         <div class="mb-4">
                             <label for="priority" class="form-label">優先度</label>
-                            <select id="priority" name="priority" class="form-select">
-                                <option value="1" th:selected="${form.priority == 1}">1</option>
-                                <option value="2" th:selected="${form.priority == 2}">2</option>
-                                <option value="3" th:selected="${form.priority == 3}">3</option>
-                                <option value="4" th:selected="${form.priority == 4}">4</option>
-                                <option value="5" th:selected="${form.priority == 5}">5</option>
+                            <select id="priority" class="form-select" th:field="*{priority}">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
                         </div>
 

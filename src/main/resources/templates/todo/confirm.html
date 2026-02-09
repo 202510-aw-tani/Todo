@@ -14,23 +14,25 @@
                 <div class="card-body">
                     <h1 class="h4 mb-4">入力内容の確認</h1>
 
-                    <form th:action="@{/todos/complete}" method="post">
+                    <form th:action="@{/todos/complete}" method="post" th:object="${form}">
                         <div class="mb-3">
-                            <label class="form-label">タイトル</label>
-                            <input type="text" class="form-control" th:value="${title}" readonly>
-                            <input type="hidden" name="title" th:value="${title}">
+                            <label class="form-label">作成者</label>
+                            <input type="text" class="form-control" th:field="*{author}" readonly>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">説明</label>
-                            <textarea class="form-control" rows="4" readonly th:text="${description}"></textarea>
-                            <input type="hidden" name="description" th:value="${description}">
+                            <label class="form-label">タイトル</label>
+                            <input type="text" class="form-control" th:field="*{title}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">詳細</label>
+                            <textarea class="form-control" rows="4" readonly th:field="*{detail}"></textarea>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">優先度</label>
-                            <input type="text" class="form-control" th:value="${priority}" readonly>
-                            <input type="hidden" name="priority" th:value="${priority}">
+                            <input type="text" class="form-control" th:field="*{priority}" readonly>
                         </div>
 
                         <div class="d-flex gap-2">
