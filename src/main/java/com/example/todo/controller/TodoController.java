@@ -1,14 +1,22 @@
 package com.example.todo.controller;
 
+import com.example.todo.form.TodoForm;
+import com.example.todo.service.TodoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class TodoController {
+
+    private final TodoService todoService;
+
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
+    }
 
     // ToDo一覧画面を表示します。
     @GetMapping("/todos")
@@ -19,34 +27,22 @@ public class TodoController {
     // ToDo新規作成画面を表示します。
     @GetMapping("/todos/new")
     public String newTodo() {
-        return "todo/new";
+        return "todo/form";
     }
 
     @PostMapping("/todos/confirm")
-    public String confirm(
-            @RequestParam("title") String title,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "priority", defaultValue = "3") Integer priority,
-            Model model
-    ) {
-        model.addAttribute("title", title);
-        model.addAttribute("description", description);
-        model.addAttribute("priority", priority);
+    public String confirm(TodoForm form, Model model) {
+        model.addAttribute("title", form.getTitle());
+        model.addAttribute("description", form.getDescription());
+        model.addAttribute("priority", form.getPriority());
         return "todo/confirm";
     }
 
     @PostMapping("/todos/complete")
-    public String complete(
-            @RequestParam("title") String title,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "priority", defaultValue = "3") Integer priority,
-            Model model
-    ) {
-        // In a real app, persist the data here.
-        model.addAttribute("title", title);
-        model.addAttribute("description", description);
-        model.addAttribute("priority", priority);
-        return "todo/complete";
+    public String complete(TodoForm form, RedirectAttributes redirectAttributes) {
+        todoService.create(form);
+        redirectAttributes.addFlashAttribute("message", "登録が完了しました");
+        return "redirect:/todos";
     }
 
     // 指定IDのToDo詳細画面を表示します。
