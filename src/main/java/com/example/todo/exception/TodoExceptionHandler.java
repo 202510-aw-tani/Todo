@@ -11,7 +11,7 @@ public class TodoExceptionHandler {
 
     @ExceptionHandler(TodoNotFoundException.class)
     public String handleTodoNotFound(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", "指定したToDoが見つかりません");
+        redirectAttributes.addFlashAttribute("error", "削除に失敗しました");
         return "redirect:/todos";
     }
 }
