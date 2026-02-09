@@ -38,7 +38,8 @@
             </thead>
             <tbody>
             <tr th:each="todo : ${todos}">
-                <td th:text="${todo.title}"></td>
+                <td th:text="${todo.title}"
+                    th:classappend="${todo.completed} ? 'text-decoration-line-through text-muted' : ''"></td>
                 <td th:text="${todo.dueDate != null ? #temporals.format(todo.dueDate, 'yyyy/MM/dd') : '-'}"
                     th:classappend="${todo.dueDate != null and todo.dueDate.isBefore(T(java.time.LocalDate).now())} ? 'text-danger' : ''"></td>
                 <td>
@@ -46,8 +47,14 @@
                     <span th:if="${todo.priority == null}">-</span>
                 </td>
                 <td>
-                    <i class="bi bi-check-circle-fill text-success" th:if="${todo.completed}"></i>
-                    <span th:unless="${todo.completed}" class="text-muted">-</span>
+                    <form class="toggle-form d-flex align-items-center gap-2"
+                          th:action="@{/todos/{id}/toggle(id=${todo.id})}" method="post">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input js-toggle" type="checkbox"
+                                   th:checked="${todo.completed}" th:data-id="${todo.id}">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">切替</button>
+                    </form>
                 </td>
                 <td class="d-flex gap-2">
                     <a class="btn btn-sm btn-outline-primary" th:href="@{/todos/{id}(id=${todo.id})}">詳細</a>
@@ -71,6 +78,45 @@
             alert.classList.add('hide');
         });
     }, 3000);
+</script>
+<script>
+    document.querySelectorAll('.toggle-form').forEach(function (form) {
+        var checkbox = form.querySelector('.js-toggle');
+        if (!checkbox) {
+            return;
+        }
+        checkbox.addEventListener('change', function (e) {
+            var original = !checkbox.checked;
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(function (res) {
+                if (!res.ok) {
+                    throw new Error('toggle failed');
+                }
+                return res.json();
+            }).then(function (data) {
+                var row = form.closest('tr');
+                if (!row) {
+                    return;
+                }
+                var titleCell = row.querySelector('td');
+                if (titleCell) {
+                    if (data.completed) {
+                        titleCell.classList.add('text-decoration-line-through', 'text-muted');
+                    } else {
+                        titleCell.classList.remove('text-decoration-line-through', 'text-muted');
+                    }
+                }
+            }).catch(function () {
+                checkbox.checked = original;
+                alert('完了状態の更新に失敗しました');
+            });
+        });
+    });
 </script>
 </body>
 </html>
