@@ -39,6 +39,12 @@ public class TodoService {
         return toForm(todo);
     }
 
+    @Transactional(readOnly = true)
+    public Todo findById(Long id) {
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+    }
+
     @Transactional
     public void update(Long id, TodoForm form) {
         Todo todo = todoRepository.findById(id)
