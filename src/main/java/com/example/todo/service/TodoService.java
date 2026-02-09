@@ -6,9 +6,11 @@ import com.example.todo.exception.TodoNotFoundForEditException;
 import com.example.todo.form.TodoForm;
 import com.example.todo.repository.TodoRepository;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 @Service
 public class TodoService {
@@ -38,6 +40,22 @@ public class TodoService {
     }
 
     @Transactional
+    public void update(Long id, TodoForm form) {
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoundForEditException(id));
+        if (!Objects.equals(form.getVersion(), todo.getVersion())) {
+            throw new OptimisticLockingFailureException("Version mismatch");
+        }
+        todo.setTitle(form.getTitle());
+        todo.setDescription(form.getDescription());
+        if (form.getPriority() != null) {
+            todo.setPriority(form.getPriority());
+        }
+        // Save is optional for managed entity, but explicit for clarity.
+        todoRepository.save(todo);
+    }
+
+    @Transactional
     public void deleteById(Long id) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
@@ -59,6 +77,7 @@ public class TodoService {
         form.setTitle(todo.getTitle());
         form.setDescription(todo.getDescription());
         form.setPriority(todo.getPriority());
+        form.setVersion(todo.getVersion());
         return form;
     }
 }

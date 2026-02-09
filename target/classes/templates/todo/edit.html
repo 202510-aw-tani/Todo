@@ -14,7 +14,8 @@
                 <div class="card-body">
                     <h1 class="h4 mb-4">ToDo 編集</h1>
 
-                    <form th:action="@{/todos/confirm}" method="post">
+                    <form th:action="@{/todos/{id}/update(id=${todoId})}" method="post">
+                        <input type="hidden" name="version" th:value="${form.version}">
                         <div class="mb-3">
                             <label for="title" class="form-label">タイトル</label>
                             <input type="text" id="title" name="title" class="form-control" required
@@ -39,7 +40,7 @@
                         </div>
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">確認</button>
+                            <button type="submit" class="btn btn-primary">更新</button>
                             <a class="btn btn-outline-secondary" th:href="@{/todos}">戻る</a>
                         </div>
                     </form>

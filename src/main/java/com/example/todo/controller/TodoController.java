@@ -2,12 +2,15 @@ package com.example.todo.controller;
 
 import com.example.todo.form.TodoForm;
 import com.example.todo.service.TodoService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 @Controller
 public class TodoController {
@@ -58,6 +61,29 @@ public class TodoController {
         model.addAttribute("form", todoService.findFormById(id));
         model.addAttribute("todoId", id);
         return "todo/edit";
+    }
+
+    @PostMapping("/todos/{id}/update")
+    public String update(
+            @PathVariable("id") Long id,
+            @Valid TodoForm form,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("todoId", id);
+            return "todo/edit";
+        }
+        try {
+            todoService.update(id, form);
+        } catch (OptimisticLockingFailureException ex) {
+            bindingResult.reject("optimisticLock", "他のユーザーによって更新されています。再読み込みしてください。");
+            model.addAttribute("todoId", id);
+            return "todo/edit";
+        }
+        redirectAttributes.addFlashAttribute("message", "更新が完了しました");
+        return "redirect:/todos";
     }
 
     // 指定IDのToDo詳細画面を表示します。

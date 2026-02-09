@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -44,6 +45,9 @@ public class Todo {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
 
     @PrePersist
     public void prePersist() {
