@@ -20,7 +20,8 @@ public class TodoController {
 
     // ToDo一覧画面を表示します。
     @GetMapping("/todos")
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("todos", todoService.findAllOrderByCreatedAtDesc());
         return "todo/list";
     }
 
