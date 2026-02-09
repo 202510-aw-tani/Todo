@@ -62,6 +62,14 @@ public class TodoService {
         todoRepository.delete(todo);
     }
 
+    @Transactional
+    public Todo toggleCompleted(Long id) {
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+        todo.setCompleted(!Boolean.TRUE.equals(todo.getCompleted()));
+        return todoRepository.save(todo);
+    }
+
     private Todo toEntity(TodoForm form) {
         Todo todo = new Todo();
         todo.setTitle(form.getTitle());
