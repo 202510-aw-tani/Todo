@@ -46,6 +46,13 @@ public class TodoController {
         return "redirect:/todos";
     }
 
+    @PostMapping("/todos/{id}/delete")
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        todoService.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "削除しました");
+        return "redirect:/todos";
+    }
+
     // 指定IDのToDo詳細画面を表示します。
     @GetMapping("/todos/{id}")
     public String detail(@PathVariable("id") Long id) {

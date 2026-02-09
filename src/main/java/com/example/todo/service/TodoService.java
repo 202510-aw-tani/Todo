@@ -1,6 +1,7 @@
 ﻿package com.example.todo.service;
 
 import com.example.todo.entity.Todo;
+import com.example.todo.exception.TodoNotFoundException;
 import com.example.todo.form.TodoForm;
 import com.example.todo.repository.TodoRepository;
 import java.util.List;
@@ -26,6 +27,13 @@ public class TodoService {
     @Transactional(readOnly = true)
     public List<Todo> findAllOrderByCreatedAtDesc() {
         return todoRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+        todoRepository.delete(todo);
     }
 
     private Todo toEntity(TodoForm form) {
